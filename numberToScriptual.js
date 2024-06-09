@@ -67,16 +67,14 @@ function hundredsTensUnits(array){
                     if(Number(array.join('') != 71)){
                         units = '-' + numbersText.find((obj)=> obj.number == '1' + array[1]).text;
                     }else{
-                        // 21, 31, 41, 51, 61, 71 TO DO
                         units = '-et-' + numbersText.find((obj)=> obj.number == '1' + array[1]).text;
                     }
                 }else{
                     if(array[0] != '0'){
                         tens = numbersText.find((obj)=> obj.number == array[0] + '0').text;
-                    }
-                    if(array[1] !== '0'){
                         units = '-' + numbersText.find((obj)=> obj.number == array[1]).text;
-                    }else if(array[1] == '1'){
+                    }
+                    if(array[1] == '1' && Number(array.join('')) < 62){
                         units = '-et-un'
                     }
                 }
