@@ -32,7 +32,6 @@ const numbersText = [
 
 function getSubArrays(number){
     const arrayOfSubArrays = [];
-    let slice = true;
     const numberToArray = String(number).split('').reverse();
     while(numberToArray.length != 0){
         arrayOfSubArrays.push(numberToArray.splice(0, 3).reverse());
@@ -48,32 +47,38 @@ function hundredsTensUnits(array){
     let hundreds = '';
     switch(arrayLength){
         case 3 :
-            if(array[0] == '1'){
-                hundreds = 'cent ';
-            }else{
+            if(array[0] !== '0'){
                 hundreds = numbersText.find((obj)=> obj.number == array[0]).text + ' cent ';
+            }else if(array[0] == '1'){
+                hundreds = 'cent ';
             }
             array.shift();
         case 2 : 
-            if(Number(array.join('')) < 17){
-                tens = numbersText.find((obj)=> obj.number == array.join('')).text;
-                units = '';
-            }else if(Number(array.join('') > 70 && Number(array.join('')) < 77 || Number(array.join('')) > 90 && Number(array.join('')) < 97 )){
-                const number = Number(array[0]) - 1;
-                tens = numbersText.find((obj)=> obj.number == number + '0').text;
-                if(Number(array.join('') != 71)){
-                    units = '-' + numbersText.find((obj)=> obj.number == '1' + array[1]).text;
-                }else{
-                    units = '-et-' + numbersText.find((obj)=> obj.number == '1' + array[1]).text;
+            if(array[0] == '0'){
+                if(array[1] != '0'){
+                    units = numbersText.find((obj)=> obj.number == array[1]).text;
                 }
-            }else{
-                tens = numbersText.find((obj)=> obj.number == array[0] + '0').text;
-                if(array[1] == '0'){
-                    units = '';
-                }else if(array[1] == '1'){
-                    units = '-et-un'
+            }else {
+                if(Number(array.join('')) > 0 && Number(array.join('')) < 17){
+                    tens = numbersText.find((obj)=> obj.number == array.join('')).text;
+                }else if(Number(array.join('') > 70 && Number(array.join('')) < 77 || Number(array.join('')) > 90 && Number(array.join('')) < 97 )){
+                    const number = Number(array[0]) - 1;
+                    tens = numbersText.find((obj)=> obj.number == number + '0').text;
+                    if(Number(array.join('') != 71)){
+                        units = '-' + numbersText.find((obj)=> obj.number == '1' + array[1]).text;
+                    }else{
+                        // 21, 31, 41, 51, 61, 71 TO DO
+                        units = '-et-' + numbersText.find((obj)=> obj.number == '1' + array[1]).text;
+                    }
                 }else{
-                    units = '-' + numbersText.find((obj)=> obj.number == array[1]).text;
+                    if(array[0] != '0'){
+                        tens = numbersText.find((obj)=> obj.number == array[0] + '0').text;
+                    }
+                    if(array[1] !== '0'){
+                        units = '-' + numbersText.find((obj)=> obj.number == array[1]).text;
+                    }else if(array[1] == '1'){
+                        units = '-et-un'
+                    }
                 }
             }
             break;
@@ -85,6 +90,10 @@ function hundredsTensUnits(array){
 }
 
 function numberToScriptual(number){
+    if(number == 0){
+        console.log('zéro')
+        return;
+    }
     const subArrays = getSubArrays(number);
     let scriptualNumber = '';
     switch(subArrays.length){
@@ -95,7 +104,12 @@ function numberToScriptual(number){
             scriptualNumber += hundredsTensUnits(subArrays[0]) + ' millions ';
             subArrays.shift();
         case 2:
-            scriptualNumber += hundredsTensUnits(subArrays[0]) + ' milles ';
+            const isOne = subArrays[0].length == 1 && subArrays[0].includes('1');
+            if(!isOne){
+                scriptualNumber += hundredsTensUnits(subArrays[0]) + ' milles ';
+            }else{
+                scriptualNumber += 'milles ';
+            }
             subArrays.shift();
         case 1:
             scriptualNumber += hundredsTensUnits(subArrays[0]);
