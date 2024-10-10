@@ -67,5 +67,18 @@ function fizzBuzz3(n: number): string[] {
     }
     return arr;
 }
-console.table(fizzBuzz3(15));
+function fizzBuzz4(n: number): string[] {
+
+    const arr: string[] = [];
+    let str: string;
+    for (let i = 1; i <= n; i++) {
+        str = "";
+        if (i % 3 == 0) str += "Fizz";
+        if (i % 5 == 0) str += "Buzz";
+        if (str == "") str = String(i);
+        arr.push(str);
+    }
+    return arr;
+}
+console.table(fizzBuzz4(15));
 
